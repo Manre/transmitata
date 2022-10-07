@@ -1,5 +1,6 @@
 # main
 Django==4.1.2
+djangorestframework==3.14.0
 requests==2.28.1
 
 # debugging
