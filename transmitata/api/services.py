@@ -26,3 +26,27 @@ def get_routes(route_name: str = None):
         }
         for r in json_response
     ]
+
+
+def find_route_by_name(route_name: str = None) -> list:
+    params = {
+        "lServicio": "Rutas",
+        "lTipo": "api",
+        "lFuncion": "searchRutaByTipo",
+        "tipo_ruta": "TIPORUTA",
+        "search": route_name,
+    }
+
+    url = "https://www.transmilenio.gov.co/loader.php"
+    response = requests.request("GET", url, params=params)
+
+    json_response = response.json()
+
+    routes_in_json = json_response.get("lista_rutas", [])
+
+    return [
+        {
+            "name": route["codigo"],
+        }
+        for route in routes_in_json
+    ]
