@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1:8000",
     "localhost",
     "localhost:8000",
+    "192.168.10.111",
 ]
 
 

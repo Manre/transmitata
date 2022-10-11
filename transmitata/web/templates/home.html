@@ -22,12 +22,12 @@
 
             check_for_route_in_url();
 
-            $("form").submit(function(e){
+            $("#find_route_form").submit(function(e){
                 e.preventDefault(e);
 
                 var route_name = $("#route_name").val();
 
-                routes = find_route(route_name)
+                routes = find_route(route_name);
             });
 
             function find_route(route_name) {
@@ -64,15 +64,6 @@
                 if (route_id !== null){
                     get_route(route_id);
                 }
-            };
-
-            function get_markers(){
-                var markers = [
-                    {"latitude": 51.5, "longitude": 0.09, "title": "manre"},
-                    {"latitude": 51.9, "longitude": 0.15, "title": "manre"}
-                ];
-
-                return markers;
             };
 
             function display_map(markers){
@@ -113,7 +104,7 @@
 
 <h1>TransmiTata</h1>
 
-<form>
+<form id="find_route_form">
     <label>Nombre de la ruta</label><br>
     <input type="text" id="route_name" value="E26B"><br>
 
@@ -123,7 +114,7 @@
 <ul id="routes_list"></ul>
 
 
-<div id="map" style="height: 500px; width: 500px;"></div>
+<div id="map" style="height: 500px; width: auto;"></div>
 
 </body>
 
