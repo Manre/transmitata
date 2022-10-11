@@ -21,24 +21,30 @@
         $(document).ready(function() {
 
             check_for_route_in_url();
-            // display_map();
 
             $("form").submit(function(e){
                 e.preventDefault(e);
 
                 var route_name = $("#route_name").val();
 
-
-
                 routes = find_route(route_name)
-                display_routes(routes);
-
-
             });
 
             function find_route(route_name) {
-                var routes = ["E26B", "B10"];
-                return routes;
+                var settings = {
+                    "url": "api/v1/route/" + route_name + "/find",
+                    "method": "GET",
+                };
+
+                $.ajax(settings).done(function (response) {
+                    var routes = [];
+                    for (let i = 0; i < response.length; i++) {
+                        var route = response[i]["name"];
+
+                        routes.push(route);
+                    };
+                    display_routes(routes);
+                });
             };
 
             function display_routes(routes) {
@@ -56,9 +62,7 @@
                 let route_id = params.route_id;
 
                 if (route_id !== null){
-                    // markers = get_markers();
                     get_route(route_id);
-                    // display_map(markers);
                 }
             };
 
