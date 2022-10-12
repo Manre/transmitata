@@ -1,4 +1,8 @@
+import logging
+
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 def get_routes(route_name: str = None):
@@ -11,10 +15,19 @@ def get_routes(route_name: str = None):
 
     url = 'https://tmsa-transmiapp-shvpc.uc.r.appspot.com/location/ruta?ruta={route_name}'
 
+    logging_info = {
+        "headers": headers,
+        "url": url,
+    }
+    logger.warning(f"Getting routes with {logging_info}")
+
     response = requests.post(
         url.format(route_name=route_name),
         headers=headers,
     )
+
+    logger.warning(f"Response of the request: {response.text}")
+    logger.warning(f"Response of the request: {response.status_code}")
 
     json_response = response.json()
 
