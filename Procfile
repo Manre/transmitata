@@ -1,1 +1,1 @@
-web: gunicorn transmitata.transmitata.wsgi --log-file -
+web: gunicorn transmitata.wsgi --log-file -
