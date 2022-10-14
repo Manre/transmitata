@@ -12,6 +12,7 @@ def get_routes(route_name: str = None):
         "user-agent": "MetroBus/1.9.7 (com.nexura.transmilenio; build:276; iOS 16.0.2) Alamofire/1.9.7",
         "accept-language": "en-US;q=1.0, es-US;q=0.9, es-419;q=0.8, ja-US;q=0.7",
     }
+    proxies = {'https': '190.145.154.214:80'}
 
     url = 'https://tmsa-transmiapp-shvpc.uc.r.appspot.com/location/ruta?ruta={route_name}'
 
@@ -24,6 +25,7 @@ def get_routes(route_name: str = None):
     response = requests.post(
         url.format(route_name=route_name),
         headers=headers,
+        proxies=proxies,
     )
 
     logger.warning(f"Response of the request: {response.text}")
