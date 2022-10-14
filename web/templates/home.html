@@ -62,6 +62,7 @@
                 let route_id = params.route_id;
 
                 if (route_id !== null){
+                    $("#route_name").val(route_id);
                     get_route(route_id);
                 }
             };
