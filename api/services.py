@@ -25,6 +25,7 @@ def get_routes(route_name: str = None):
     response = requests.post(
         url.format(route_name=route_name),
         headers=headers,
+        timeout=5,
         proxies=proxies,
     )
 
