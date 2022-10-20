@@ -19,8 +19,67 @@
 </head>
 <script type='text/javascript'>
         $(document).ready(function() {
+            let config = {
+                minZoom: 7,
+                maxZoom: 18,
+            };
+            const zoom = 13;
+            const lat = 4.7090;
+            const lng = -74.0649;
 
-            check_for_route_in_url();
+            const map = L.map("map", config).setView([lat, lng], zoom);
+
+            L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            }).addTo(map);
+            var markerGroup = L.layerGroup().addTo(map);
+
+            window.addEventListener("load", function() { check_for_route_in_url(); });
+
+            function check_for_route_in_url(){
+                const params = new Proxy(new URLSearchParams(window.location.search), {
+                    get: (searchParams, prop) => searchParams.get(prop),
+                });
+
+                let route_id = params.route_id;
+
+                if (route_id !== null){
+                    $("#route_name").val(route_id);
+                    get_route(route_id);
+                }
+            };
+
+            function get_route(route_id){
+                var settings = {
+                    "url": "api/v1/route/" + route_id,
+                    "method": "GET",
+                };
+
+                $.ajax(settings).done(function (points) {
+                    display_map(points);
+                });
+
+                setTimeout(
+                    function(){
+                        get_route(route_id);
+                    },
+                    10 * 1000  // 10 seconds
+                );
+            };
+
+            function display_map(points) {
+                markerGroup.clearLayers()
+
+                for (var i = 0; i < points.length; i++) {
+                    var latitude = points[i]["latitude"];
+                    var longitude = points[i]["longitude"];
+                    var title = points[i]["title"];
+
+                    marker = new L.marker([latitude,longitude]).bindPopup(title).addTo(markerGroup);
+                }
+            }
+
+            // Find route
 
             $("#find_route_form").submit(function(e){
                 e.preventDefault(e);
@@ -51,51 +110,8 @@
                 for (let i = 0; i < routes.length; i++) {
                     $('#routes_list').append('<li><a href="?route_id=' + routes[i] + '">' + routes[i] + '</a></li>');
                 }
-
             };
 
-            function check_for_route_in_url(){
-                const params = new Proxy(new URLSearchParams(window.location.search), {
-                    get: (searchParams, prop) => searchParams.get(prop),
-                });
-
-                let route_id = params.route_id;
-
-                if (route_id !== null){
-                    $("#route_name").val(route_id);
-                    get_route(route_id);
-                }
-            };
-
-            function display_map(markers){
-                var map = L.map('map').setView([4.7090,-74.0649], 13);
-
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-
-                for (let i = 0; i < markers.length; i++) {
-                    var latitude = markers[i]["latitude"];
-                    var longitude = markers[i]["longitude"];
-                    var title = markers[i]["title"];
-
-                    var marker = L.marker([latitude, longitude]).addTo(map);
-                    marker.bindPopup(title);
-                }
-            };
-
-            function get_route(route_id){
-                var settings = {
-                    "url": "api/v1/route/" + route_id,
-                    "method": "GET",
-                };
-
-                $.ajax(settings).done(function (response) {
-                    var markers = response;
-                    display_map(markers);
-                });
-            };
         });
 
 

@@ -28,9 +28,6 @@ def get_routes(route_name: str = None):
         proxies=proxies,
     )
 
-    logger.warning(f"Response of the request: {response.text}")
-    logger.warning(f"Response of the request: {response.status_code}")
-
     json_response = response.json()
 
     return [
