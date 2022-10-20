@@ -73,7 +73,9 @@
                 for (var i = 0; i < points.length; i++) {
                     var latitude = points[i]["latitude"];
                     var longitude = points[i]["longitude"];
-                    var title = points[i]["title"];
+                    var route_name = points[i]["route_name"];
+                    var bus_id = points[i]["bus_id"];
+                    var title = bus_id + ' - ' + route_name;
 
                     marker = new L.marker([latitude,longitude]).bindPopup(title).addTo(markerGroup);
                 }

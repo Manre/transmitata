@@ -34,7 +34,8 @@ def get_routes(route_name: str = None):
         {
             "latitude": r['latitude'],
             "longitude": r['longitude'],
-            "title": route_name
+            "bus_id": r['label'],
+            "route_name": route_name,
         }
         for r in json_response
     ]
