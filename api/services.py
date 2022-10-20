@@ -1,4 +1,5 @@
 import logging
+import random
 
 import requests
 
@@ -12,9 +13,33 @@ def get_routes(route_name: str = None):
         "user-agent": "MetroBus/1.9.7 (com.nexura.transmilenio; build:276; iOS 16.0.2) Alamofire/1.9.7",
         "accept-language": "en-US;q=1.0, es-US;q=0.9, es-419;q=0.8, ja-US;q=0.7",
     }
-    proxies = {'https': '190.145.154.214:80'}
+    proxy_list = [
+        '190.61.88.147:8080',
+        '45.7.132.102:8080',
+        '181.129.49.214:999',
+        '190.109.16.145:999',
+        '181.225.101.14:999',
+        '181.129.124.245:999',
+        '200.25.254.193:54240',
+        '190.61.48.25:999',
+        '201.244.127.210:8080',
+        '181.129.138.114:30838',
+        '181.129.43.3:8080',
+        '138.117.84.161:999',
+        '181.78.27.34:999',
+        '190.61.45.157:999',
+        '181.78.16.235:8080',
+        '181.205.41.210:7654',
+        '200.106.187.242:999',
+        '181.49.217.254:8080',
+        '181.129.2.90:8081',
+        '179.1.129.93:999',
+    ]
+    proxy = random.choice(proxy_list)
+    logger.info(f'Using proxy: {proxy}')
+    proxies = {'http': proxy}
 
-    url = 'https://tmsa-transmiapp-shvpc.uc.r.appspot.com/location/ruta?ruta={route_name}'
+    url = 'http://tmsa-transmiapp-shvpc.uc.r.appspot.com/location/ruta?ruta={route_name}'
 
     logging_info = {
         "headers": headers,
@@ -22,12 +47,16 @@ def get_routes(route_name: str = None):
     }
     logger.warning(f"Getting routes with {logging_info}")
 
-    response = requests.post(
-        url.format(route_name=route_name),
-        headers=headers,
-        timeout=5,
-        proxies=proxies,
-    )
+    try:
+        response = requests.post(
+            url.format(route_name=route_name),
+            headers=headers,
+            timeout=5,
+            proxies=proxies,
+        )
+    except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+        logger.error('Timeout error')
+        return []
 
     if response.text == '':
         return []

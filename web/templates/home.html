@@ -56,14 +56,16 @@
                 };
 
                 $.ajax(settings).done(function (points) {
-                    display_map(points);
+                    if (points.length > 0){
+                        display_map(points);
+                    }
                 });
 
                 setTimeout(
                     function(){
                         get_route(route_id);
                     },
-                    10 * 1000  // 10 seconds
+                    5 * 1000  // 5 seconds
                 );
             };
 
