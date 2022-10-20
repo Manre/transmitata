@@ -28,6 +28,9 @@ def get_routes(route_name: str = None):
         proxies=proxies,
     )
 
+    if response.text == '':
+        return []
+
     json_response = response.json()
 
     return [
@@ -59,7 +62,8 @@ def find_route_by_name(route_name: str = None) -> list:
 
     return [
         {
-            "name": route["codigo"],
+            "route_code": route["codigo"],
+            "route_name": route["nombre"],
         }
         for route in routes_in_json
     ]

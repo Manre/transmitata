@@ -100,7 +100,10 @@
                 $.ajax(settings).done(function (response) {
                     var routes = [];
                     for (let i = 0; i < response.length; i++) {
-                        var route = response[i]["name"];
+                        var route_code = response[i]["route_code"];
+                        var route_name = response[i]["route_name"];
+                        var display_name = route_code + ', ' + route_name;
+                        var route = {"display_name": display_name, "route_code": route_code};
 
                         routes.push(route);
                     };
@@ -109,8 +112,10 @@
             };
 
             function display_routes(routes) {
+                $("#routes_list").empty();
+
                 for (let i = 0; i < routes.length; i++) {
-                    $('#routes_list').append('<li><a href="?route_id=' + routes[i] + '">' + routes[i] + '</a></li>');
+                    $('#routes_list').append('<li><a href="?route_id=' + routes[i]['route_code'] + '">' + routes[i]['display_name'] + '</a></li>');
                 }
             };
 
