@@ -32,8 +32,8 @@ def get_routes(route_name: str = None):
             timeout=5,
             proxies=proxies,
         )
-    except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
-        logger.error('Timeout error')
+    except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ProxyError):
+        logger.error('Timeout or proxy error')
         proxy.reduce_response_count()
         return []
 
