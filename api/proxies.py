@@ -45,9 +45,9 @@ def get_proxy() -> MyProxy:
         proxy.response_count
         for proxy in proxy_list
     ]
-    print(current_proxies)
 
     current_proxies.sort(reverse=True)
+    print(current_proxies)
     best_proxy_response = get_proxies_with_best_responses(proxies=current_proxies)
     if 0 < len(best_proxy_response) <= 3:
         response_count = random.choice(best_proxy_response)

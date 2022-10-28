@@ -34,7 +34,11 @@
             }).addTo(map);
             var markerGroup = L.layerGroup().addTo(map);
 
-            window.addEventListener("load", function() { check_for_route_in_url(); });
+            if (document.readyState === 'complete') {
+              check_for_route_in_url();
+            } else {
+              window.addEventListener('load', function() { check_for_route_in_url(); });
+            }
 
             function check_for_route_in_url(){
                 const params = new Proxy(new URLSearchParams(window.location.search), {
