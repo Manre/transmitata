@@ -52,7 +52,7 @@ def get_proxy() -> MyProxy:
     if 0 < len(best_proxy_response) <= 3:
         response_count = random.choice(best_proxy_response)
     else:
-        response_count = random.choice(current_proxies[:3])
+        response_count = random.choice(current_proxies[:4])
 
     selected_proxy: MyProxy = find_proxy_by_response_count(response_count=response_count)
 
