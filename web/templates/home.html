@@ -45,17 +45,17 @@
                     get: (searchParams, prop) => searchParams.get(prop),
                 });
 
-                let route_id = params.route_id;
+                let route_code = params.route_code;
 
-                if (route_id !== null){
-                    $("#route_name").val(route_id);
-                    get_route(route_id);
+                if (route_code !== null){
+                    $("#route_name").val(route_code);
+                    get_route(route_code);
                 }
             };
 
-            function get_route(route_id){
+            function get_route(route_code){
                 var settings = {
-                    "url": "api/v1/route/" + route_id,
+                    "url": "api/v1/route/" + route_code,
                     "method": "GET",
                 };
 
@@ -67,7 +67,7 @@
 
                 setTimeout(
                     function(){
-                        get_route(route_id);
+                        get_route(route_code);
                     },
                     5 * 1000  // 5 seconds
                 );
@@ -121,7 +121,7 @@
                 $("#routes_list").empty();
 
                 for (let i = 0; i < routes.length; i++) {
-                    $('#routes_list').append('<li><a href="?route_id=' + routes[i]['route_code'] + '">' + routes[i]['display_name'] + '</a></li>');
+                    $('#routes_list').append('<li><a href="?route_code=' + routes[i]['route_code'] + '">' + routes[i]['display_name'] + '</a></li>');
                 }
             };
 

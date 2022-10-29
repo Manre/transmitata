@@ -30,7 +30,7 @@ def get_routes(route_name: str = None):
             url.format(route_name=route_name),
             headers=headers,
             timeout=5,
-            proxies=proxies,
+            # proxies=proxies,
         )
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ProxyError):
         logger.error('Timeout or proxy error')
@@ -78,6 +78,7 @@ def find_route_by_name(route_name: str = None) -> list:
 
     return [
         {
+            "route_id": route["id"],
             "route_code": route["codigo"],
             "route_name": route["nombre"],
         }
