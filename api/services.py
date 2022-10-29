@@ -30,7 +30,7 @@ def get_routes(route_name: str = None):
             url.format(route_name=route_name),
             headers=headers,
             timeout=5,
-            # proxies=proxies,
+            proxies=proxies,
         )
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ProxyError):
         logger.error('Timeout or proxy error')
@@ -84,3 +84,31 @@ def find_route_by_name(route_name: str = None) -> list:
         }
         for route in routes_in_json
     ]
+
+
+def get_stations(route_id: str = None):
+    params = {
+        "lServicio": "Rutas",
+        "lTipo": "api",
+        "lFuncion": "infoRuta",
+        "idRuta": route_id,
+    }
+    url = "https://www.transmilenio.gov.co/loader.php"
+
+    response = requests.get(url, params=params)
+
+    json_response = response.json()
+
+    stations = [
+        (
+            lambda x: {
+                'lat': x[0],
+                'lon': x[1],
+            }
+        )(
+            route_path['coordenada'].split(',')
+        )
+        for route_path in json_response['recorrido']['data']
+    ]
+
+    return stations
