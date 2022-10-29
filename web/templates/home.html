@@ -82,6 +82,11 @@
 
             function display_map(points) {
                 markerGroup.clearLayers()
+                var options = {
+                  icon: 'bus',
+                  iconShape: 'marker'
+
+                };
 
                 for (var i = 0; i < points.length; i++) {
                     var latitude = points[i]["latitude"];
@@ -90,7 +95,10 @@
                     var bus_id = points[i]["bus_id"];
                     var title = bus_id + ' - ' + route_name;
 
-                    marker = new L.marker([latitude,longitude]).bindPopup(title).addTo(markerGroup);
+                    marker = new L.marker([latitude,longitude], {
+                        icon: L.BeautifyIcon.icon(options),
+                        draggable: false
+                    }).bindPopup(title).addTo(markerGroup);
                 }
             }
 
