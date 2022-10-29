@@ -30,7 +30,7 @@ def get_routes(route_name: str = None):
             url.format(route_name=route_name),
             headers=headers,
             timeout=5,
-            proxies=proxies,
+            # proxies=proxies,
         )
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ProxyError):
         logger.error('Timeout or proxy error')
@@ -86,7 +86,7 @@ def find_route_by_name(route_name: str = None) -> list:
     ]
 
 
-def get_stations(route_id: str = None):
+def find_stations_for_route(route_id: str = None):
     params = {
         "lServicio": "Rutas",
         "lTipo": "api",
