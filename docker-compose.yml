@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: ./docker_setup_script
+    volumes:
+      - .:/transmitata
+      - .root_home:/root
+    ports:
+      - "8000:8000"
+      - "443:443"

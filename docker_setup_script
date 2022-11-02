@@ -1,0 +1,12 @@
+#!/bin/sh
+
+cd /transmitata
+apt-get -y install nginx
+pip install --upgrade pip
+pip install -r requirements.txt --upgrade
+
+python manage.py runserver 0.0.0.0:8000
+while [ 1 ]; do
+    date
+    sleep 30
+done
