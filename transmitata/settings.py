@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     "localhost:8000",
     "192.168.10.111",
     "transmitata.herokuapp.com",
+    ".ngrok.io",
 ]
 
 
