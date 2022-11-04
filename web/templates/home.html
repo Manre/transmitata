@@ -23,6 +23,8 @@
 </head>
 <script type='text/javascript'>
         $(document).ready(function() {
+            $("#loading_icon").hide();
+
             let config = {
                 minZoom: 7,
                 maxZoom: 18,
@@ -66,7 +68,9 @@
                     "method": "GET",
                 };
 
+                $("#loading_icon").show();
                 $.ajax(settings).done(function (points) {
+                    $("#loading_icon").hide();
                     if (points.length > 0){
                         display_map(points);
                     }
@@ -193,6 +197,9 @@
     <input type="text" id="route_name" value=""><br>
 
     <input id="send" type="submit" value="Buscar">
+
+    <img id="loading_icon" style="width:20px;height:20px; float: inline-end;"
+     src="https://github.com/Codelessly/FlutterLoadingGIFs/blob/master/packages/cupertino_activity_indicator_square_large.gif?raw=true"></img>
 </form>
 
 <ul id="routes_list"></ul>
