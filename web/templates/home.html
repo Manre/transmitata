@@ -13,13 +13,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://masajid390.github.io/BeautifyMarker/leaflet-beautify-marker-icon.css">
+    <link rel="stylesheet" href="{% static 'css/Control.Loading.css' %}">
 
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
             integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://masajid390.github.io/BeautifyMarker/leaflet-beautify-marker-icon.js"></script>
-    <script src="{% static 'js/spin.min.js' %}" charset="utf-8"></script>
-    <script src="{% static 'js/leaflet.spin.min.js' %}" charset="utf-8"></script>
+    <script src="{% static 'js/Control.Loading.js' %}"></script>
 
     <title>TransmiTata</title>
 
@@ -36,6 +36,11 @@
             const lng = -74.0649;
 
             const map = L.map("map", config).setView([lat, lng], zoom);
+
+            var loadingControl = L.Control.loading({
+                separate: true
+            });
+            map.addControl(loadingControl);
 
             L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -70,9 +75,9 @@
                     "method": "GET",
                 };
 
-                map.spin(true);
+                map.fireEvent('dataloading');
                 $.ajax(settings).done(function (points) {
-                    map.spin(false);
+                    map.fireEvent('dataload');
                     if (points.length > 0){
                         display_map(points);
                     }
