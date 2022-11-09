@@ -17,6 +17,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
             integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+    <script src="{% static 'js/leaflet.geometryutil.js' %}"></script>
+    <script src="{% static 'js/leaflet-arrowheads.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://masajid390.github.io/BeautifyMarker/leaflet-beautify-marker-icon.js"></script>
     <script src="{% static 'js/Control.Loading.js' %}"></script>
@@ -26,9 +28,8 @@
 </head>
 <script type='text/javascript'>
         $(document).ready(function() {
-
+            var bus_routes_path = {};
             let config = {
-                minZoom: 7,
                 maxZoom: 18,
             };
             const zoom = 13;
@@ -47,6 +48,7 @@
             }).addTo(map);
             var markerGroup = L.layerGroup().addTo(map);
             var stationsGroup = L.layerGroup().addTo(map);
+            var arrowsGroup = L.layerGroup().addTo(map);
 
             if (document.readyState === 'complete') {
               check_for_route_in_url();
@@ -110,6 +112,43 @@
                         icon: L.BeautifyIcon.icon(options),
                         draggable: false
                     }).bindPopup(title).addTo(markerGroup);
+
+                    var old_path = {
+                        "lat": (
+                            bus_routes_path.hasOwnProperty(bus_id) ? (
+                                bus_routes_path[bus_id].hasOwnProperty("new_path") ? (
+                                    bus_routes_path[bus_id]["new_path"].hasOwnProperty("lat") ? bus_routes_path[bus_id]["new_path"]["lat"] : null
+                                ) : null
+                            ) : null
+                        ),
+                        "lon": (
+                            bus_routes_path.hasOwnProperty(bus_id) ? (
+                                bus_routes_path[bus_id].hasOwnProperty("new_path") ? (
+                                    bus_routes_path[bus_id]["new_path"].hasOwnProperty("lon") ? bus_routes_path[bus_id]["new_path"]["lon"] : null
+                                ) : null
+                            ) : null
+                        )
+                    };
+
+                    var new_path = {
+                        "lat": latitude,
+                        "lon": longitude,
+                    };
+
+                    bus_routes_path[bus_id] = {
+                        "new_path": new_path,
+                        "old_path": old_path
+                    };
+
+                    if (old_path["lat"] !== null && old_path["lat"] !== new_path["lat"]){
+                        vector_coordinates = [
+                            [old_path["lat"], old_path["lon"]],
+                            [new_path["lat"], new_path["lon"]],
+                        ]
+                        var myVector = L.polyline([vector_coordinates]).arrowheads();
+                        // myVector.addTo(arrowsGroup);
+                    }
+
                 }
             }
 
