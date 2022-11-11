@@ -135,18 +135,31 @@
                         "lon": longitude,
                     };
 
-                    bus_routes_path[bus_id] = {
-                        "new_path": new_path,
-                        "old_path": old_path
-                    };
+                    if (old_path["lat"] === null){
+                        bus_routes_path[bus_id] = {
+                            "new_path": new_path,
+                            "old_path": new_path,
+                            "vector": null,
+                        };
+                    }
 
                     if (old_path["lat"] !== null && old_path["lat"] !== new_path["lat"]){
+                        if (bus_routes_path[bus_id].hasOwnProperty("vector") && bus_routes_path[bus_id]["vector"] !== null){
+                            bus_routes_path[bus_id]["vector"].remove();
+                        };
+
                         vector_coordinates = [
                             [old_path["lat"], old_path["lon"]],
-                            [new_path["lat"], new_path["lon"]],
+                            [new_path["lat"], new_path["lon"]]
                         ]
                         var myVector = L.polyline([vector_coordinates]).arrowheads();
-                        // myVector.addTo(arrowsGroup);
+                        myVector.addTo(arrowsGroup);
+
+                        bus_routes_path[bus_id] = {
+                            "new_path": new_path,
+                            "old_path": old_path,
+                            "vector": myVector,
+                        };
                     }
 
                 }
