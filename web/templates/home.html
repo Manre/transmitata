@@ -17,11 +17,10 @@
 
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
             integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
-    <script src="{% static 'js/leaflet.geometryutil.js' %}"></script>
-    <script src="{% static 'js/leaflet-arrowheads.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://masajid390.github.io/BeautifyMarker/leaflet-beautify-marker-icon.js"></script>
     <script src="{% static 'js/Control.Loading.js' %}"></script>
+    <script src="{% static 'js/leaflet.polylineDecorator.js' %}"></script>
 
     <title>TransmiTata</title>
 
@@ -145,15 +144,25 @@
 
                     if (old_path["lat"] !== null && old_path["lat"] !== new_path["lat"]){
                         if (bus_routes_path[bus_id].hasOwnProperty("vector") && bus_routes_path[bus_id]["vector"] !== null){
-                            bus_routes_path[bus_id]["vector"].remove();
+                            arrowsGroup.removeLayer(bus_routes_path[bus_id]["vector"]);
                         };
 
                         vector_coordinates = [
                             [old_path["lat"], old_path["lon"]],
                             [new_path["lat"], new_path["lon"]]
                         ]
-                        var myVector = L.polyline([vector_coordinates]).arrowheads();
-                        myVector.addTo(arrowsGroup);
+
+                        var arrow = L.polyline([vector_coordinates]);
+                        var arrowHead = L.polylineDecorator(arrow, {
+                            patterns: [
+                                {
+                                    offset: '100%',
+                                    symbol: L.Symbol.arrowHead({pixelSize: 10, polygon: false, pathOptions: {stroke: true}})
+                                }
+                            ]
+                        });
+                        var myVector = L.layerGroup([arrow, arrowHead]);
+                        arrowsGroup.addLayer(myVector);
 
                         bus_routes_path[bus_id] = {
                             "new_path": new_path,
