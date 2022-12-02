@@ -1,11 +1,21 @@
 #!/bin/sh
 
+ISARM=$(lscpu | grep arm)
 cd /transmitata
 apt-get -y install nginx
 pip install --upgrade pip
 pip install -r requirements.txt --upgrade
 
-python manage.py runserver 0.0.0.0:8000
+if [ "$ISARM" = "Architecture:                    armv7l" ];
+then
+  echo 'Running loophole on ARM'
+  /transmitata/bin/loophole1.0.0-beta.15.armv7 http --hostname transmitata 8000 &
+  echo 'Running python server'
+  python manage.py runserver 0.0.0.0:8000
+else
+  echo 'Development mode detected...'
+fi
+
 while [ 1 ]; do
     date
     sleep 30
