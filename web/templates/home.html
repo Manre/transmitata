@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://masajid390.github.io/BeautifyMarker/leaflet-beautify-marker-icon.css">
     <link rel="stylesheet" href="{% static 'css/Control.Loading.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
 
     <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
             integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
@@ -21,6 +22,7 @@
     <script src="https://masajid390.github.io/BeautifyMarker/leaflet-beautify-marker-icon.js"></script>
     <script src="{% static 'js/Control.Loading.js' %}"></script>
     <script src="{% static 'js/leaflet.polylineDecorator.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
     <title>TransmiTata</title>
 
@@ -36,6 +38,12 @@
             const lng = -74.0649;
 
             const map = L.map("map", config).setView([lat, lng], zoom);
+
+            L.control.locate({
+                setView: false,
+                flyTo: true,
+                keepCurrentZoomLevel: true,
+            }).addTo(map);
 
             var loadingControl = L.Control.loading({
                 separate: true
