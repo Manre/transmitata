@@ -14,6 +14,11 @@ The following commands will help you accomplish certain tasks
     python manage.py shell_plus  # an overpower shell! xD
     python manage.py runserver 0.0.0.0:8000  # run the server
 
+# Troubleshooting
+
+1. Check for logs: `docker logs transmitata_web_1 --tail 1000`
+2. Enter into the instance: `docker exec -it transmitata_web_1 bash`
+
 # Service on RPi
 
 Taken from https://stackoverflow.com/questions/43671482/how-to-run-docker-compose-up-d-at-system-start-up
