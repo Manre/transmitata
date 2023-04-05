@@ -1,9 +1,6 @@
 import subprocess
 import time
 
-# cmd_str = "curl -Is transmitata.loophole.site | head -n 1"
-# cmd_str = "curl transmitata.loophole.site -s -o /dev/null -w '%{http_code}\n'"
-# cmd_str = "curl -IsL --insecure  https://transmitata.loophole.site"
 status_check_command = "curl -IsL --insecure  https://transmitata.loophole.site -o /dev/null -w '%{http_code}\n'"
 reboot_command = "sudo reboot"
 
