@@ -23,6 +23,7 @@ The following commands will help you accomplish certain tasks
 
 Taken from https://stackoverflow.com/questions/43671482/how-to-run-docker-compose-up-d-at-system-start-up
 
+## Transmitata
 0. Create `transmitata.service` on `/etc/systemd/system/` with
 ```bash
 [Unit]
@@ -41,4 +42,24 @@ TimeoutStartSec=0
 [Install]
 WantedBy=multi-user.target
 ```
-0. Enable the service with `systemctl enable transmitata`. Now you will only need to restart the RPi to test it. 
+0. Enable the service with `systemctl enable transmitata`. Now you will only need to restart the RPi to test it.
+0. Check for the status `systemctl status transmitata`.
+
+## Transmitata Status Checker
+0. Create `transmitata_status_checker.service` on `/etc/systemd/system/` with
+```bash
+[Unit]
+Description=Service to check Transmitata disponibility
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/pi/Documents/code/transmitata
+ExecStart=python internet_checker.py
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+```
+0. Enable the service with `systemctl enable transmitata_status_checker`. Now you will only need to restart the RPi to test it.
+0. Check for the status `systemctl status transmitata_status_checker`.
