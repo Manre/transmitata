@@ -10,7 +10,6 @@ TIMEOUT_IN_SECONDS = 8
 unresponsive_server = 0
 while True:
     exception_occurred = False
-    error = None
 
     try:
         response = subprocess.run(status_check_command, shell=True, capture_output=True, timeout=TIMEOUT_IN_SECONDS)
@@ -18,6 +17,7 @@ while True:
         exception_occurred = True
         status_code = "None"
     else:
+        error = "NoError"
         status_code = response.stdout.decode()  # "200\n"
 
     if exception_occurred is True or ("200" not in status_code):
