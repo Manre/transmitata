@@ -18,6 +18,7 @@ The following commands will help you accomplish certain tasks
 
 1. Check for logs: `docker logs transmitata_web_1 --tail 1000`
 2. Enter into the instance: `docker exec -it transmitata_web_1 bash`
+3. Check for logs `journalctl -u transmitata_status_checker`
 
 # Service on RPi
 
