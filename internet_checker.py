@@ -1,18 +1,17 @@
 import subprocess
 import time
 
-status_check_command = "curl -IsL --insecure  https://transmitata.loophole.site -o /dev/null -w '%{http_code}\n'"
+status_check_command = "curl -IsL  https://google.com.co -o /dev/null -w '%{http_code}\n'"
 reboot_command = "sudo reboot"
 
 UNRESPONSIVE_MINUTES = 10
-TIMEOUT_IN_SECONDS = 8
 
 unresponsive_server = 0
 while True:
     exception_occurred = False
 
     try:
-        response = subprocess.run(status_check_command, shell=True, capture_output=True, timeout=TIMEOUT_IN_SECONDS)
+        response = subprocess.run(status_check_command, shell=True, capture_output=True)
     except Exception as error:
         exception_occurred = True
         status_code = "None"
