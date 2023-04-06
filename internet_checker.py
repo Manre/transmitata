@@ -28,7 +28,7 @@ while True:
             f"{unresponsive_server * UNRESPONSIVE_MINUTES / 60} minutes."
         )
     else:
-        print("Server is responding...")
+        # print("Server is responding...")  # too many logs
         unresponsive_server = 0
 
     time.sleep(10)
