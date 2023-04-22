@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     "192.168.10.111",
     "transmitata.herokuapp.com",
     ".ngrok.io",
+    ".pagekite.me",
 ]
 
 

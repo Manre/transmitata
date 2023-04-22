@@ -9,5 +9,5 @@ while True:
         subprocess.run(cmd_str, shell=True)
     except Exception as error:
         print(f"An exception has occurred {str(error)}")
-        time.sleep(5)
+        time.sleep(25)
         pass
