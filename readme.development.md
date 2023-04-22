@@ -19,6 +19,7 @@ The following commands will help you accomplish certain tasks
 1. Check for logs: `docker logs transmitata_web_1 --tail 1000`
 2. Enter into the instance: `docker exec -it transmitata_web_1 bash`
 3. Check for logs `journalctl -u transmitata_status_checker`
+4. Check for logs `journalctl -u transmitata_pagekite -r`
 
 # Service on RPi
 
@@ -46,11 +47,11 @@ WantedBy=multi-user.target
 0. Enable the service with `systemctl enable transmitata`. Now you will only need to restart the RPi to test it.
 0. Check for the status `systemctl status transmitata`.
 
-## Transmitata Status Checker
+## Transmitata Status Checker - loophole
 0. Create `transmitata_status_checker.service` on `/etc/systemd/system/` with
 ```bash
 [Unit]
-Description=Service to check Transmitata disponibility
+Description=Service to check Transmitata availability
 
 [Service]
 Type=oneshot
@@ -64,3 +65,30 @@ WantedBy=multi-user.target
 ```
 0. Enable the service with `systemctl enable transmitata_status_checker`. Now you will only need to restart the RPi to test it.
 0. Check for the status `systemctl status transmitata_status_checker`.
+
+## PageKite
+
+0. Create `transmitata_pagekite.service` on `/etc/systemd/system/` with
+```bash
+[Unit]
+Description=Service to expose Transmitata using pagekite
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/pi/Documents/code/transmitata
+ExecStart=python3 bin/pagekite.py --optfile=/home/pi/Documents/code/transmitata/bin/.pagekite.rc 8000 transmitata.pagekite.me 
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+```
+0. Enable the service with `systemctl enable transmitata_pagekite.service`. Now you will only need to restart the RPi to test it.
+1. Check for the status `systemctl status transmitata_pagekite.service`.
+
+Remember:
+
+1. To save the file:
+    python bin/pagekite.py --savefile=/transmitata/bin/.pagekite.rc --save 8000 transmitata.pagekite.me 
+2. To load the file
+    python bin/pagekite.py --optfile=/transmitata/bin/.pagekite.rc 8000 transmitata.pagekite.me 
