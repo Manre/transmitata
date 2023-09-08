@@ -5,6 +5,3 @@ requests==2.28.1
 
 # debugging
 ipython==8.5.0
-
-# heroku
-gunicorn==20.1.0

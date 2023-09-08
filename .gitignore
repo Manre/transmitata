@@ -131,3 +131,4 @@ dmypy.json
 # Custom for transmitata
 .root_home
 bin/.pagekite.rc
+.idea

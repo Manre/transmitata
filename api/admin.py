@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from api.models import Route, RouteCollection
+
+admin.site.register(Route)
+admin.site.register(RouteCollection)
