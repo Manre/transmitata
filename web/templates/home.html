@@ -73,7 +73,10 @@
                 let route_id = params.route_id;
                 let bookmark = params.bookmark;
 
-                get_routes_for_bookmark(bookmark);
+                if (bookmark !== null){
+                    get_routes_for_bookmark(bookmark);
+                }
+
                 if (route_code !== null && route_id !== null){
                     $("#route_name").val(route_code);
                     get_route(route_code);
@@ -265,7 +268,7 @@
                     var route_collection_id = route_collections[i]['id'];
                     var route_collection_name = route_collections[i]['name'];
 
-                    a_text = `<a href='/?bookmark=${route_collection_id}'>${route_collection_name}</a>`;
+                    a_text = `<a href='/?bookmark=${route_collection_id}#SHOW_MAP'>${route_collection_name}</a>`;
                     li_text = `<li> ${a_text} </li>`;
 
                     $('#route_collections').append(li_text);
@@ -275,6 +278,11 @@
             function display_routes_from_bookmark(response) {
                 $("#bookmarks").empty();
                 var routes = response["routes"];
+                var response_length = Object.keys(response).length;
+
+                if (response_length > 0){
+                    $("#buses_collections").show();
+                }
 
                 var params_from_url_as_dict = get_params_as_json_from_url();
                 for (let i = 0; i < routes.length; i++) {
@@ -285,7 +293,7 @@
                     var merged_dictionaries = Object.assign({}, params_from_url_as_dict, url_params_dict);
                     var url_params_text = build_url_from_dictionary(merged_dictionaries);
 
-                    a_text = `<a href='?${url_params_text}'>${route_code}</a>`;
+                    a_text = `<a href='?${url_params_text}#SHOW_MAP'>${route_code}</a>`;
                     li_text = `<li style='display: inline;'> ${a_text} </li>`;
 
                     $('#bookmarks').append(li_text);
@@ -345,7 +353,7 @@
 
 <body>
 
-<h1>TransmiTata</h1>
+<h1><a href="/">TransmiTata</a></h1>
 
 <form id="find_route_form">
     <label>Nombre de la ruta</label><br>
@@ -357,10 +365,12 @@
 
 <ul id="routes_list"></ul>
 
-<h4>Rutas de la colección:</h4>
-<ul id="bookmarks"></ul>
-
+<span id="SHOW_MAP"></span>
 <div id="map" style="height: 500px; width: auto;"></div>
+
+<div id="buses_collections" style="display: none;">
+    <ul id="bookmarks"></ul>
+</div>
 
 <h4>Colecciones de buses</h4>
 <ul id="route_collections"></ul>
