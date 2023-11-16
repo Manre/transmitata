@@ -16,11 +16,14 @@ class RouteCollectionListSerializer(serializers.ModelSerializer):
 
 
 class RouteCollectionDetailSerializer(serializers.ModelSerializer):
-    routes = RouteSerializer(
-        many=True,
-        read_only=True,
-    )
+    routes = serializers.SerializerMethodField('get_routes')
 
     class Meta:
         model = RouteCollection
         fields = ['id', 'name', 'routes']
+        ordering = ['routes']
+
+    def get_routes(self, instance):
+        routes = instance.routes.order_by('code')
+
+        return RouteSerializer(routes, many=True, context=self.context).data
