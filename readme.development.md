@@ -35,8 +35,9 @@ After=docker.service
 
 [Service]
 Type=oneshot
+User=manre
 RemainAfterExit=yes
-WorkingDirectory=/home/pi/Documents/code/transmitata
+WorkingDirectory=/home/manre/Documents/code/transmitata
 ExecStart=/usr/local/bin/docker-compose up -d
 ExecStop=/usr/local/bin/docker-compose down
 TimeoutStartSec=0
@@ -56,7 +57,7 @@ Description=Service to check Transmitata availability
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/home/pi/Documents/code/transmitata
+WorkingDirectory=/home/manre/Documents/code/transmitata
 ExecStart=python internet_checker.py
 TimeoutStartSec=0
 
@@ -76,8 +77,8 @@ Description=Service to expose Transmitata using pagekite
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/home/pi/Documents/code/transmitata
-ExecStart=python3 bin/pagekite.py --optfile=/home/pi/Documents/code/transmitata/bin/.pagekite.rc 8000 transmitata.pagekite.me 
+WorkingDirectory=/home/manre/Documents/code/transmitata
+ExecStart=python3 bin/pagekite.py --optfile=/home/manre/Documents/code/transmitata/bin/.pagekite.rc 8000 transmitata.pagekite.me 
 TimeoutStartSec=0
 
 [Install]
