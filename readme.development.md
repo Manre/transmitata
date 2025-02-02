@@ -93,3 +93,10 @@ Remember:
     python bin/pagekite.py --savefile=/transmitata/bin/.pagekite.rc --save 8000 transmitata.pagekite.me 
 2. To load the file
     python bin/pagekite.py --optfile=/transmitata/bin/.pagekite.rc 8000 transmitata.pagekite.me 
+
+
+# Database Backup
+
+1. Create a fixture by running `python manage.py dumpdata >> 2025-02-01-all-backup.json`
+2. Load the backup by running `python manage.py loaddata 2025-02-01-all-backup.json`
+3. 

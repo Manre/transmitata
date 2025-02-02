@@ -7,5 +7,5 @@ services:
       - .:/transmitata
       - .root_home:/root
     ports:
-      - "8000:8000"
+      - "8218:8000"
       - "443:443"
