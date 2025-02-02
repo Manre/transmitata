@@ -6,6 +6,7 @@ services:
     volumes:
       - .:/transmitata
       - .root_home:/root
+    restart: unless-stopped
     ports:
       - "8218:8000"
       - "443:443"
