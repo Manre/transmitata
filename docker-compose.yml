@@ -9,4 +9,4 @@ services:
     restart: unless-stopped
     ports:
       - "8218:8000"
-      - "443:443"
+#      - "443:443"
