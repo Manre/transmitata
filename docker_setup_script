@@ -1,14 +1,14 @@
 #!/bin/sh
 
-ISARM=$(lscpu | grep arm)
+ARCH=$(lscpu | grep "Architecture" | awk '{print $2}')
 cd /transmitata
 pip install --upgrade pip
 pip install -r requirements.txt --upgrade
 
-if [ "$ISARM" = "Architecture:                    armv7l" ];
+if [ "$ARCH" = "armv7l" ] || [ "$ARCH" = "aarch64" ];
 then
-  echo 'Running loophole on ARM'
-  python loophole_server.py &
+#  echo 'Running loophole on ARM'
+#  python loophole_server.py &
   echo 'Running python server'
   python manage.py runserver 0.0.0.0:8000
 else
