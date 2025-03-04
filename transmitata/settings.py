@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
     ".ngrok.io",
     ".pagekite.me",
     "192.168.10.102",
+    'transmitata.manre-universe.net',
 ]
 
 
