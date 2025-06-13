@@ -51,6 +51,7 @@ def get_routes(route_name: str = None):
 
 
 def find_route_by_name(route_name: str = None) -> list:
+    url = "https://www.transmilenio.gov.co/loader.php"
     params = {
         "lServicio": "Rutas",
         "lTipo": "api",
@@ -58,9 +59,14 @@ def find_route_by_name(route_name: str = None) -> list:
         "tipo_ruta": "TIPORUTA",
         "search": route_name,
     }
+    headers = {
+        'User-Agent': (
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) '
+            'Version/18.4 Mobile/15E148 Safari/604.1'
+        ),
+    }
 
-    url = "https://www.transmilenio.gov.co/loader.php"
-    response = requests.request("GET", url, params=params)
+    response = requests.request("GET", url, params=params, headers=headers)
 
     json_response = response.json()
 
@@ -77,15 +83,21 @@ def find_route_by_name(route_name: str = None) -> list:
 
 
 def find_stations_for_route(route_id: str = None):
+    url = "https://www.transmilenio.gov.co/loader.php"
     params = {
         "lServicio": "Rutas",
         "lTipo": "api",
         "lFuncion": "infoRuta",
         "idRuta": route_id,
     }
-    url = "https://www.transmilenio.gov.co/loader.php"
+    headers = {
+        'User-Agent': (
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) '
+            'Version/18.4 Mobile/15E148 Safari/604.1'
+        ),
+    }
 
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, headers=headers)
 
     json_response = response.json()
 
