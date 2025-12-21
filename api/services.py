@@ -10,7 +10,6 @@ def get_routes(route_name: str = None):
         "accept": "*/*",
         "appid": "9a2c3b48f0c24ae9bfba38e94f27c3ea",
         "user-agent": "MetroBus/1.9.7 (com.nexura.transmilenio; build:276; iOS 16.0.2) Alamofire/1.9.7",
-        # 'User-Agent': 'MetroBus/2.50 (com.nexura.transmilenio; build:345; iOS 26.1.0) Alamofire/4.9.1',
         "accept-language": "en-US;q=1.0, es-US;q=0.9, es-419;q=0.8, ja-US;q=0.7",
     }
 
@@ -79,7 +78,7 @@ def find_route_by_name(route_name: str = None) -> list:
 
 
 def find_stations_for_route(route_id: str = None):
-    url = "https://www.transmilenio.gov.co/loader.php"
+    url = "https://api.buscador-rutas.transmilenio.gov.co/loader.php"
     params = {
         "lServicio": "Rutas",
         "lTipo": "api",
@@ -88,8 +87,7 @@ def find_stations_for_route(route_id: str = None):
     }
     headers = {
         'User-Agent': (
-            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) '
-            'Version/18.4 Mobile/15E148 Safari/604.1'
+            'MetroBus/2.50 (com.nexura.transmilenio; build:345; iOS 26.2.0) Alamofire/4.9.1'
         ),
     }
 
