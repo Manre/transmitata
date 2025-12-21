@@ -5,7 +5,7 @@ You can run the project by doing the following:
 
 If you want to log into the machine you can:
 
-    docker exec -it transmitata_web_1 bash
+    docker exec -it transmitata-web-1 bash
 
 The project should be under the /transmitata/ directory
 
@@ -16,8 +16,8 @@ The following commands will help you accomplish certain tasks
 
 # Troubleshooting
 
-1. Check for logs: `docker logs transmitata_web_1 --tail 1000`
-2. Enter into the instance: `docker exec -it transmitata_web_1 bash`
+1. Check for logs: `docker logs transmitata-web-1 --tail 1000`
+2. Enter into the instance: `docker exec -it transmitata-web-1 bash`
 3. Check for logs `journalctl -u transmitata_status_checker`
 4. Check for logs `journalctl -u transmitata_pagekite -r`
 

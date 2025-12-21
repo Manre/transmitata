@@ -10,6 +10,7 @@ def get_routes(route_name: str = None):
         "accept": "*/*",
         "appid": "9a2c3b48f0c24ae9bfba38e94f27c3ea",
         "user-agent": "MetroBus/1.9.7 (com.nexura.transmilenio; build:276; iOS 16.0.2) Alamofire/1.9.7",
+        # 'User-Agent': 'MetroBus/2.50 (com.nexura.transmilenio; build:345; iOS 26.1.0) Alamofire/4.9.1',
         "accept-language": "en-US;q=1.0, es-US;q=0.9, es-419;q=0.8, ja-US;q=0.7",
     }
 
@@ -51,22 +52,17 @@ def get_routes(route_name: str = None):
 
 
 def find_route_by_name(route_name: str = None) -> list:
-    url = "https://www.transmilenio.gov.co/loader.php"
-    params = {
-        "lServicio": "Rutas",
-        "lTipo": "api",
-        "lFuncion": "searchRutaByTipo",
-        "tipo_ruta": "TIPORUTA",
-        "search": route_name,
-    }
+    url = (
+        'https://api.buscador-rutas.transmilenio.gov.co/loader.php?lServicio=Rutas&lTipo=api&lFuncion=searchRutaByTipo&'
+        f'tipo_ruta=TIPORUTA&search={route_name}'
+    )
+
     headers = {
-        'User-Agent': (
-            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) '
-            'Version/18.4 Mobile/15E148 Safari/604.1'
-        ),
+        'User-Agent': 'MetroBus/2.50 (com.nexura.transmilenio; build:345; iOS 26.1.0) Alamofire/4.9.1',
+        'Host': 'api.buscador-rutas.transmilenio.gov.co',
     }
 
-    response = requests.request("GET", url, params=params, headers=headers)
+    response = requests.request("GET", url, headers=headers)
 
     json_response = response.json()
 
