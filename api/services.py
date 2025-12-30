@@ -5,7 +5,11 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def get_routes(route_name: str = None):
+def get_routes(route_name: str = "") -> list:
+    if not route_name:
+        logger.warning("No route name provided")
+        return []
+
     headers = {
         "accept": "*/*",
         "appid": "9a2c3b48f0c24ae9bfba38e94f27c3ea",
@@ -27,30 +31,59 @@ def get_routes(route_name: str = None):
             headers=headers,
             timeout=5,
         )
-    except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ProxyError):
-        logger.error('Timeout or proxy error')
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+    except requests.exceptions.ConnectTimeout:
+        logger.error(f'Connection timeout when fetching routes for {route_name}')
+        return []
+    except requests.exceptions.ReadTimeout:
+        logger.error(f'Read timeout when fetching routes for {route_name}')
+        return []
+    except requests.exceptions.ProxyError:
+        logger.error(f'Proxy error when fetching routes for {route_name}')
+        return []
+    except requests.exceptions.ConnectionError:
+        logger.error(f'Connection error when fetching routes for {route_name}')
+        return []
+    except requests.exceptions.HTTPError as e:
+        logger.error(f'HTTP error {e.response.status_code} when fetching routes for {route_name}: {e}')
+        return []
+    except requests.exceptions.RequestException as e:
+        logger.error(f'Unexpected error when fetching routes for {route_name}: {e}')
         return []
 
     if response.text == '':
+        logger.warning(f'Empty response when fetching routes for {route_name}')
         return []
 
     try:
         json_response = response.json()
-    except requests.exceptions.JSONDecodeError:
+    except requests.exceptions.JSONDecodeError as e:
+        logger.error(f'JSON decode error when fetching routes for {route_name}: {e}')
         return []
 
-    return [
-        {
-            "latitude": r['latitude'],
-            "longitude": r['longitude'],
-            "bus_id": r['label'],
-            "route_name": route_name,
-        }
-        for r in json_response
-    ]
+    try:
+        return [
+            {
+                "latitude": r['latitude'],
+                "longitude": r['longitude'],
+                "bus_id": r['label'],
+                "route_name": route_name,
+            }
+            for r in json_response
+        ]
+    except KeyError as e:
+        logger.error(f'Missing key {e} in route data for {route_name}')
+        return []
+    except TypeError:
+        logger.error(f'Invalid data format in route response for {route_name}')
+        return []
 
 
-def find_route_by_name(route_name: str = None) -> list:
+def find_route_by_name(route_name: str = "") -> list:
+    if not route_name:
+        logger.warning("No route name provided for search")
+        return []
+
     url = (
         'https://api.buscador-rutas.transmilenio.gov.co/loader.php?lServicio=Rutas&lTipo=api&lFuncion=searchRutaByTipo&'
         f'tipo_ruta=TIPORUTA&search={route_name}'
@@ -61,23 +94,55 @@ def find_route_by_name(route_name: str = None) -> list:
         'Host': 'api.buscador-rutas.transmilenio.gov.co',
     }
 
-    response = requests.request("GET", url, headers=headers)
+    try:
+        response = requests.request("GET", url, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.ConnectTimeout:
+        logger.error(f'Connection timeout when searching for route {route_name}')
+        return []
+    except requests.exceptions.ReadTimeout:
+        logger.error(f'Read timeout when searching for route {route_name}')
+        return []
+    except requests.exceptions.ConnectionError:
+        logger.error(f'Connection error when searching for route {route_name}')
+        return []
+    except requests.exceptions.HTTPError as e:
+        logger.error(f'HTTP error {e.response.status_code} when searching for route {route_name}: {e}')
+        return []
+    except requests.exceptions.RequestException as e:
+        logger.error(f'Unexpected error when searching for route {route_name}: {e}')
+        return []
 
-    json_response = response.json()
+    try:
+        json_response = response.json()
+    except requests.exceptions.JSONDecodeError as e:
+        logger.error(f'JSON decode error when searching for route {route_name}: {e}')
+        return []
 
-    routes_in_json = json_response.get("lista_rutas", [])
+    try:
+        routes_in_json = json_response.get("lista_rutas", [])
+        
+        return [
+            {
+                "route_id": route["id"],
+                "route_code": route["codigo"],
+                "route_name": route["nombre"],
+            }
+            for route in routes_in_json
+        ]
+    except KeyError as e:
+        logger.error(f'Missing key {e} in route search results for {route_name}')
+        return []
+    except TypeError:
+        logger.error(f'Invalid data format in route search response for {route_name}')
+        return []
 
-    return [
-        {
-            "route_id": route["id"],
-            "route_code": route["codigo"],
-            "route_name": route["nombre"],
-        }
-        for route in routes_in_json
-    ]
 
+def find_stations_for_route(route_id: str = "") -> list:
+    if not route_id:
+        logger.warning("No route ID provided for station search")
+        return []
 
-def find_stations_for_route(route_id: str = None):
     url = "https://api.buscador-rutas.transmilenio.gov.co/loader.php"
     params = {
         "lServicio": "Rutas",
@@ -91,20 +156,51 @@ def find_stations_for_route(route_id: str = None):
         ),
     }
 
-    response = requests.get(url, params=params, headers=headers)
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.ConnectTimeout:
+        logger.error(f'Connection timeout when fetching stations for route {route_id}')
+        return []
+    except requests.exceptions.ReadTimeout:
+        logger.error(f'Read timeout when fetching stations for route {route_id}')
+        return []
+    except requests.exceptions.ConnectionError:
+        logger.error(f'Connection error when fetching stations for route {route_id}')
+        return []
+    except requests.exceptions.HTTPError as e:
+        logger.error(f'HTTP error {e.response.status_code} when fetching stations for route {route_id}: {e}')
+        return []
+    except requests.exceptions.RequestException as e:
+        logger.error(f'Unexpected error when fetching stations for route {route_id}: {e}')
+        return []
 
-    json_response = response.json()
+    try:
+        json_response = response.json()
+    except requests.exceptions.JSONDecodeError as e:
+        logger.error(f'JSON decode error when fetching stations for route {route_id}: {e}')
+        return []
 
-    stations = [
-        (
-            lambda x: {
-                'lat': x[0],
-                'lon': x[1],
-            }
-        )(
-            route_path['coordenada'].split(',')
-        )
-        for route_path in json_response['recorrido']['data']
-    ]
-
-    return stations
+    try:
+        stations = [
+            (
+                lambda x: {
+                    'lat': x[0],
+                    'lon': x[1],
+                }
+            )(
+                route_path['coordenada'].split(',')
+            )
+            for route_path in json_response['recorrido']['data']
+        ]
+        
+        return stations
+    except KeyError as e:
+        logger.error(f'Missing key {e} in station data for route {route_id}')
+        return []
+    except TypeError:
+        logger.error(f'Invalid data format in station response for route {route_id}')
+        return []
+    except Exception as e:
+        logger.error(f'Unexpected error processing station data for route {route_id}: {e}')
+        return []
