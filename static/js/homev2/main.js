@@ -19,13 +19,13 @@ $(document).ready(function() {
 
 function initializeMap() {
     let config = {
-        maxZoom: 18,
+        maxZoom: window.AppConstants.MAP.MAX_ZOOM,
     };
-    const zoom = 13;
-    const lat = 4.7090;
-    const lng = -74.0649;
+    const zoom = window.AppConstants.MAP.DEFAULT_ZOOM;
+    const lat = window.AppConstants.MAP.DEFAULT_LAT;
+    const lng = window.AppConstants.MAP.DEFAULT_LNG;
 
-    window.map = L.map("map", config).setView([lat, lng], zoom);
+    window.map = L.map(window.AppConstants.UI.MAP, config).setView([lat, lng], zoom);
 
     L.control.locate({
         setView: false,
@@ -38,8 +38,8 @@ function initializeMap() {
     });
     map.addControl(loadingControl);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    L.tileLayer(window.AppConstants.MAP.TILE_URL, {
+        attribution: window.AppConstants.MAP.TILE_ATTRIBUTION,
     }).addTo(map);
     
     window.markerGroup = L.layerGroup().addTo(map);
@@ -48,9 +48,9 @@ function initializeMap() {
 }
 
 function setupEventListeners() {
-    $("#find_route_form").submit(function(e){
+    $("#" + window.AppConstants.UI.ROUTE_FORM).submit(function(e){
         e.preventDefault(e);
-        var route_name = $("#route_name").val();
+        var route_name = $("#" + window.AppConstants.UI.ROUTE_NAME_INPUT).val();
         find_route(route_name);
     });
 }
@@ -69,7 +69,7 @@ function check_for_route_in_url(){
     }
 
     if (route_code !== null && route_id !== null){
-        $("#route_name").val(route_code);
+        $("#" + window.AppConstants.UI.ROUTE_NAME_INPUT).val(route_code);
         get_route(route_code);
         get_stations(route_id);
     }

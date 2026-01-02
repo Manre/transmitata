@@ -1,6 +1,6 @@
 function get_list_of_route_collections() {
     var settings = {
-        "url": "/api/v1/collections/",
+        "url": window.AppConstants.API.COLLECTIONS + "/",
         "method": "GET",
     };
 
@@ -11,7 +11,7 @@ function get_list_of_route_collections() {
 
 function get_routes_for_bookmark(bookmark) {
     var settings = {
-        "url": `/api/v1/collections/${bookmark}/`,
+        "url": window.AppConstants.API.COLLECTIONS + `/${bookmark}/`,
         "method": "GET",
     };
 
@@ -21,7 +21,7 @@ function get_routes_for_bookmark(bookmark) {
 };
 
 function display_list_of_route_collections(route_collections) {
-    $("#route_collections").empty();
+    $("#" + window.AppConstants.UI.COLLECTIONS_LIST).empty();
 
     for (let i = 0; i < route_collections.length; i++) {
         var route_collection_id = route_collections[i]['id'];
@@ -30,17 +30,17 @@ function display_list_of_route_collections(route_collections) {
         a_text = `<a href='/?bookmark=${route_collection_id}#SHOW_MAP'>${route_collection_name}</a>`;
         li_text = `<li> ${a_text} </li>`;
 
-        $('#route_collections').append(li_text);
+        $('#' + window.AppConstants.UI.COLLECTIONS_LIST).append(li_text);
     }
 };
 
 function display_routes_from_bookmark(response) {
-    $("#bookmarks").empty();
+    $("#" + window.AppConstants.UI.BOOKMARKS_LIST).empty();
     var routes = response["routes"];
     var response_length = Object.keys(response).length;
 
     if (response_length > 0){
-        $("#buses_collections").show();
+        $("#" + window.AppConstants.UI.BUSES_COLLECTIONS).show();
     }
 
     var params_from_url_as_dict = get_params_as_json_from_url();
@@ -55,6 +55,6 @@ function display_routes_from_bookmark(response) {
         a_text = `<a href='?${url_params_text}#SHOW_MAP'>${route_code}</a>`;
         li_text = `<li style='display: inline;'> ${a_text} </li>`;
 
-        $('#bookmarks').append(li_text);
+        $('#' + window.AppConstants.UI.BOOKMARKS_LIST).append(li_text);
     }
 };

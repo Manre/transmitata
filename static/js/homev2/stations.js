@@ -1,6 +1,6 @@
 function get_stations(route_id){
     var settings = {
-        "url": "/api/v1/stations/" + route_id + '/find',
+        "url": window.AppConstants.API.STATIONS + "/" + route_id + '/find',
         "method": "GET",
     };
 
@@ -12,11 +12,7 @@ function get_stations(route_id){
 };
 
 function display_stations_in_map(stations) {
-    var options = {
-      icon: 'bus',
-      borderColor: '#b3334f',
-      textColor: '#b3334f'
-    };
+    var options = window.AppConstants.ICONS.STATION;
 
     for (var i = 0; i < stations.length; i++) {
         var latitude = stations[i]["lat"];

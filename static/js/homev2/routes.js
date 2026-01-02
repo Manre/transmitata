@@ -1,6 +1,6 @@
 function get_route(route_code){
     var settings = {
-        "url": "/api/v1/route/" + route_code,
+        "url": window.AppConstants.API.ROUTES + "/" + route_code,
         "method": "GET",
     };
 
@@ -16,16 +16,13 @@ function get_route(route_code){
         function(){
             get_route(route_code);
         },
-        5 * 1000  // 5 seconds
+        window.AppConstants.INTERVALS.ROUTE_UPDATE
     );
 };
 
 function display_map(points) {
     window.markerGroup.clearLayers()
-    var options = {
-      icon: 'bus',
-      iconShape: 'marker'
-    };
+    var options = window.AppConstants.ICONS.BUS;
 
     for (var i = 0; i < points.length; i++) {
         var latitude = points[i]["latitude"];
@@ -106,7 +103,7 @@ function update_bus_path(bus_id, latitude, longitude) {
 
 function find_route(route_name) {
     var settings = {
-        "url": "/api/v1/route/" + route_name + "/find",
+        "url": window.AppConstants.API.ROUTES + "/" + route_name + "/find",
         "method": "GET",
     };
 
@@ -126,7 +123,7 @@ function find_route(route_name) {
 };
 
 function display_routes(routes) {
-    $("#routes_list").empty();
+    $("#" + window.AppConstants.UI.ROUTES_LIST).empty();
 
     var params_from_url_as_dict = get_params_as_json_from_url();
     for (let i = 0; i < routes.length; i++) {
@@ -141,6 +138,6 @@ function display_routes(routes) {
         a_text = `<a href='?${url_params_text}'>${display_name}</a>`;
         li_text = `<li>${a_text}</li>`;
 
-        $('#routes_list').append(li_text);
+        $('#' + window.AppConstants.UI.ROUTES_LIST).append(li_text);
     }
 };
