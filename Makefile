@@ -15,10 +15,16 @@ shell:
 	@echo "Executing bash in the $(CONTAINER_NAME) container..."
 	docker exec -it $(CONTAINER_NAME) bash
 
+# Target to run Django tests
+tests:
+	@echo "Running Django tests..."
+	python3 manage.py test api.tests web.tests
+
 # Help message
 help:
 	@echo "Makefile commands:"
-	@echo "  start       - Start docker compose"
-	@echo "  shell       - Run bash inside the container"
+	@echo "  start           - Start docker compose"
+	@echo "  shell           - Run bash inside the container"
+	@echo "  tests           - Run Django tests (api and web apps)"
 
 .PHONY: start start-detached shell down test coverage help
