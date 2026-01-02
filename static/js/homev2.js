@@ -56,7 +56,7 @@ $(document).ready(function() {
 
     function get_route(route_code){
         var settings = {
-            "url": "api/v1/route/" + route_code,
+            "url": "/api/v1/route/" + route_code,
             "method": "GET",
         };
 
@@ -170,7 +170,7 @@ $(document).ready(function() {
 
     function get_list_of_route_collections() {
         var settings = {
-            "url": "api/v1/collections/",
+            "url": "/api/v1/collections/",
             "method": "GET",
         };
 
@@ -181,7 +181,7 @@ $(document).ready(function() {
 
     function get_routes_for_bookmark(bookmark) {
         var settings = {
-            "url": `api/v1/collections/${bookmark}/`,
+            "url": `/api/v1/collections/${bookmark}/`,
             "method": "GET",
         };
 
@@ -192,7 +192,7 @@ $(document).ready(function() {
 
     function find_route(route_name) {
         var settings = {
-            "url": "api/v1/route/" + route_name + "/find",
+            "url": "/api/v1/route/" + route_name + "/find",
             "method": "GET",
         };
 
@@ -274,7 +274,7 @@ $(document).ready(function() {
 
     function get_stations(route_id){
         var settings = {
-            "url": "api/v1/stations/" + route_id + '/find',
+            "url": "/api/v1/stations/" + route_id + '/find',
             "method": "GET",
         };
 
