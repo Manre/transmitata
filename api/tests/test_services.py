@@ -1,5 +1,6 @@
 from unittest.mock import patch, Mock
 import pytest
+from api.exceptions import TransmilenioAPIError
 from api.services import get_routes, find_route_by_name, find_stations_for_route
 
 
@@ -40,12 +41,13 @@ class TestGetRoutes:
 
     @patch('api.services.requests.post')
     def test_get_routes_connection_timeout(self, mock_post):
-        """Test get_routes when connection times out"""
+        """Test get_routes when connection times out raises TransmilenioAPIError"""
         from requests.exceptions import ConnectTimeout
         mock_post.side_effect = ConnectTimeout()
 
-        result = get_routes('T1')
-        assert result == []
+        with pytest.raises(TransmilenioAPIError) as exc_info:
+            get_routes('T1')
+        assert 'El servicio de Transmilenio no está disponible' in str(exc_info.value)
 
     @patch('api.services.requests.post')
     def test_get_routes_empty_response(self, mock_post):
@@ -60,15 +62,17 @@ class TestGetRoutes:
 
     @patch('api.services.requests.post')
     def test_get_routes_json_decode_error(self, mock_post):
-        """Test get_routes when JSON decode error occurs"""
+        """Test get_routes when JSON decode error occurs raises TransmilenioAPIError"""
         from requests.exceptions import JSONDecodeError
         mock_response = Mock()
+        mock_response.text = 'invalid'
         mock_response.json.side_effect = JSONDecodeError('Invalid JSON', '', 0)
         mock_response.raise_for_status.return_value = None
         mock_post.return_value = mock_response
 
-        result = get_routes('T1')
-        assert result == []
+        with pytest.raises(TransmilenioAPIError) as exc_info:
+            get_routes('T1')
+        assert 'Error al procesar la respuesta de Transmilenio' in str(exc_info.value)
 
 
 class TestFindRouteByName:

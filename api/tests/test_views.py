@@ -2,6 +2,7 @@ from unittest.mock import patch
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from api.exceptions import TransmilenioAPIError
 from api.models import Route, RouteCollection
 
 
@@ -35,6 +36,18 @@ class RoutesViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
         mock_get_routes.assert_called_once_with(route_name='INVALID')
+
+    @patch('api.views.get_routes')
+    def test_routes_view_api_error_returns_502(self, mock_get_routes):
+        """Test RoutesView returns 502 when service raises TransmilenioAPIError"""
+        mock_get_routes.side_effect = TransmilenioAPIError('El servicio de Transmilenio no está disponible')
+
+        url = reverse('routes', kwargs={'route_name': 'T1'})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_502_BAD_GATEWAY)
+        self.assertEqual(response.data['error'], 'El servicio de Transmilenio no está disponible')
+        mock_get_routes.assert_called_once_with(route_name='T1')
 
 
 class FindRoutesViewTest(APITestCase):
@@ -71,6 +84,18 @@ class FindRoutesViewTest(APITestCase):
         self.assertEqual(len(response.data), 2)
         mock_find_route.assert_called_once_with(route_name='T')
 
+    @patch('api.views.find_route_by_name')
+    def test_find_routes_view_api_error_returns_502(self, mock_find_route):
+        """Test FindRoutesView returns 502 when service raises TransmilenioAPIError"""
+        mock_find_route.side_effect = TransmilenioAPIError('El servicio de Transmilenio no está disponible')
+
+        url = reverse('find-routes', kwargs={'route_name': 'T1'})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_502_BAD_GATEWAY)
+        self.assertEqual(response.data['error'], 'El servicio de Transmilenio no está disponible')
+        mock_find_route.assert_called_once_with(route_name='T1')
+
 
 class FindStationsForRouteViewTest(APITestCase):
     """Test cases for FindStationsForRoute view"""
@@ -91,6 +116,18 @@ class FindStationsForRouteViewTest(APITestCase):
             {'lat': '4.56', 'lon': '-74.12'},
             {'lat': '4.57', 'lon': '-74.13'}
         ])
+        mock_find_stations.assert_called_once_with(route_id='123')
+
+    @patch('api.views.find_stations_for_route')
+    def test_find_stations_view_api_error_returns_502(self, mock_find_stations):
+        """Test FindStationsForRoute returns 502 when service raises TransmilenioAPIError"""
+        mock_find_stations.side_effect = TransmilenioAPIError('El servicio de Transmilenio no está disponible')
+
+        url = reverse('find-stations', kwargs={'route_id': '123'})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_502_BAD_GATEWAY)
+        self.assertEqual(response.data['error'], 'El servicio de Transmilenio no está disponible')
         mock_find_stations.assert_called_once_with(route_id='123')
 
 
