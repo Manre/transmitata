@@ -251,10 +251,9 @@
                         display_routes(routes);
                     })
                     .fail(function (jqXHR) {
-                        if (jqXHR.status === 502) {
-                            var errorMsg = jqXHR.responseJSON?.error || 'Error al conectar con Transmilenio';
-                            showError(errorMsg);
-                        }
+                        console.log('AJAX failed:', jqXHR.status, jqXHR.responseJSON);
+                        var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
+                        showError(errorMsg);
                     });
             };
 
@@ -362,6 +361,7 @@
             // Error handling
 
             function showError(message) {
+                console.log('showError called with:', message);
                 $('#error_message').text(message);
                 $('#error_container').show();
             }

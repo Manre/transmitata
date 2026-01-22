@@ -1,7 +1,7 @@
 """urls for web"""
 from django.urls import path
 
-from .views import HomeView, HomeV2View
+from .views import HomeView
 
 app_name = "web"
 
@@ -11,9 +11,9 @@ urlpatterns = [
         HomeView.as_view(),
         name="home",
     ),
-    path(
-        "v2/",
-        HomeV2View.as_view(),
-        name="home-v2",
-    ),
+    # path(
+    #     "v2/",
+    #     HomeV2View.as_view(),
+    #     name="home-v2",
+    # ),
 ]

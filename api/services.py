@@ -96,7 +96,6 @@ def find_route_by_name(route_name: str = "") -> list:
         'Host': 'api.buscador-rutas.transmilenio.gov.co',
     }
 
-    raise TransmilenioAPIError('El servicio de Transmilenio no está disponible')
     try:
         response = requests.request("GET", url, headers=headers, timeout=10)
         response.raise_for_status()
