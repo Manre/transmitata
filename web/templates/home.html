@@ -101,8 +101,8 @@
                     })
                     .fail(function (jqXHR) {
                         map.fireEvent('dataload');
-                        var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
-                        showError(errorMsg, 'route');
+                        var errorDetail = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
+                        showError('Buses: ' + errorDetail, 'route');
                     });
 
                 setTimeout(
@@ -329,8 +329,8 @@
                         }
                     })
                     .fail(function (jqXHR) {
-                        var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al obtener estaciones';
-                        showError(errorMsg, 'stations');
+                        var errorDetail = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
+                        showError('Estaciones: ' + errorDetail, 'stations');
                     });
             };
 
