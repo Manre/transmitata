@@ -1,32 +1,58 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from api.exceptions import TransmilenioAPIError
 from api.models import RouteCollection
 from api.serializers import RouteCollectionDetailSerializer, RouteCollectionListSerializer
+from transmitata.__version__ import VERSION
 from .services import get_routes, find_route_by_name, find_stations_for_route
+
+
+class VersionView(APIView):
+
+    def get(self, request):
+        return Response({"version": VERSION})
 
 
 class RoutesView(APIView):
 
     def get(self, request, route_name):
-        response = get_routes(route_name=route_name)
-        return Response(response)
+        try:
+            response = get_routes(route_name=route_name)
+            return Response(response)
+        except TransmilenioAPIError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_502_BAD_GATEWAY
+            )
 
 
 class FindRoutesView(APIView):
 
     def get(self, request, route_name):
-        response = find_route_by_name(route_name=route_name)
-        return Response(response)
+        try:
+            response = find_route_by_name(route_name=route_name)
+            return Response(response)
+        except TransmilenioAPIError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_502_BAD_GATEWAY
+            )
 
 
 class FindStationsForRoute(APIView):
 
     def get(self, request, route_id):
-        response = find_stations_for_route(route_id=route_id)
-        return Response(response)
+        try:
+            response = find_stations_for_route(route_id=route_id)
+            return Response(response)
+        except TransmilenioAPIError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_502_BAD_GATEWAY
+            )
 
 
 class RouteCollectionViewSet(

@@ -91,12 +91,19 @@
                 };
 
                 map.fireEvent('dataloading');
-                $.ajax(settings).done(function (points) {
-                    map.fireEvent('dataload');
-                    if (points.length > 0){
-                        display_map(points);
-                    }
-                });
+                $.ajax(settings)
+                    .done(function (points) {
+                        map.fireEvent('dataload');
+                        hideError('route');
+                        if (points.length > 0){
+                            display_map(points);
+                        }
+                    })
+                    .fail(function (jqXHR) {
+                        map.fireEvent('dataload');
+                        var errorDetail = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
+                        showError('Buses: ' + errorDetail, 'route');
+                    });
 
                 setTimeout(
                     function(){
@@ -226,19 +233,25 @@
                     "method": "GET",
                 };
 
-                $.ajax(settings).done(function (response) {
-                    var routes = [];
-                    for (let i = 0; i < response.length; i++) {
-                        var route_code = response[i]["route_code"];
-                        var route_id = response[i]["route_id"];
-                        var route_name = response[i]["route_name"];
-                        var display_name = route_code + ', ' + route_name;
-                        var route = {"display_name": display_name, "route_code": route_code, "route_id": route_id};
+                $.ajax(settings)
+                    .done(function (response) {
+                        hideError();
+                        var routes = [];
+                        for (let i = 0; i < response.length; i++) {
+                            var route_code = response[i]["route_code"];
+                            var route_id = response[i]["route_id"];
+                            var route_name = response[i]["route_name"];
+                            var display_name = route_code + ', ' + route_name;
+                            var route = {"display_name": display_name, "route_code": route_code, "route_id": route_id};
 
-                        routes.push(route);
-                    };
-                    display_routes(routes);
-                });
+                            routes.push(route);
+                        };
+                        display_routes(routes);
+                    })
+                    .fail(function (jqXHR) {
+                        var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
+                        showError(errorMsg);
+                    });
             };
 
             function display_routes(routes) {
@@ -308,11 +321,17 @@
                     "method": "GET",
                 };
 
-                $.ajax(settings).done(function (stations) {
-                    if (stations.length > 0){
-                        display_stations_in_map(stations);
-                    }
-                });
+                $.ajax(settings)
+                    .done(function (stations) {
+                        hideError('stations');
+                        if (stations.length > 0){
+                            display_stations_in_map(stations);
+                        }
+                    })
+                    .fail(function (jqXHR) {
+                        var errorDetail = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
+                        showError('Estaciones: ' + errorDetail, 'stations');
+                    });
             };
 
             function display_stations_in_map(stations) {
@@ -331,6 +350,31 @@
                         icon: L.BeautifyIcon.icon(options),
                         draggable: false
                     }).bindPopup(title).addTo(stationsGroup);
+                }
+            }
+
+            // Error handling
+            var activeErrors = {};
+
+            function showError(message, source) {
+                source = source || 'general';
+                activeErrors[source] = message;
+                updateErrorDisplay();
+            }
+
+            function hideError(source) {
+                source = source || 'general';
+                delete activeErrors[source];
+                updateErrorDisplay();
+            }
+
+            function updateErrorDisplay() {
+                var errorMessages = Object.values(activeErrors);
+                if (errorMessages.length > 0) {
+                    $('#error_message').text(errorMessages.join(' | '));
+                    $('#error_container').show();
+                } else {
+                    $('#error_container').hide();
                 }
             }
 
@@ -353,7 +397,11 @@
 
 <body>
 
-<h1><a href="/">TransmiTata</a></h1>
+<h1><a href="/">TransmiTata</a> <span style="font-size: 0.4em; color: #888; font-weight: normal;">v{{ version }}</span></h1>
+
+<div id="error_container" style="display: none; background-color: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border: 1px solid #f5c6cb; border-radius: 4px;">
+    <span id="error_message"></span>
+</div>
 
 <form id="find_route_form">
     <label>Nombre de la ruta</label><br>

@@ -2,6 +2,8 @@ import logging
 
 import requests
 
+from api.exceptions import TransmilenioAPIError
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,22 +36,22 @@ def get_routes(route_name: str = "") -> list:
         response.raise_for_status()  # Raises an HTTPError for bad responses
     except requests.exceptions.ConnectTimeout:
         logger.error(f'Connection timeout when fetching routes for {route_name}')
-        return []
+        raise TransmilenioAPIError('Tiempo de espera agotado al conectar con Transmilenio')
     except requests.exceptions.ReadTimeout:
         logger.error(f'Read timeout when fetching routes for {route_name}')
-        return []
+        raise TransmilenioAPIError('Transmilenio tardó demasiado en responder')
     except requests.exceptions.ProxyError:
         logger.error(f'Proxy error when fetching routes for {route_name}')
-        return []
+        raise TransmilenioAPIError('Error de conexión con Transmilenio')
     except requests.exceptions.ConnectionError:
         logger.error(f'Connection error when fetching routes for {route_name}')
-        return []
+        raise TransmilenioAPIError('No se pudo conectar con Transmilenio')
     except requests.exceptions.HTTPError as e:
         logger.error(f'HTTP error {e.response.status_code} when fetching routes for {route_name}: {e}')
-        return []
+        raise TransmilenioAPIError(f'Transmilenio respondió con error ({e.response.status_code})')
     except requests.exceptions.RequestException as e:
         logger.error(f'Unexpected error when fetching routes for {route_name}: {e}')
-        return []
+        raise TransmilenioAPIError('Error inesperado al consultar Transmilenio')
 
     if response.text == '':
         logger.warning(f'Empty response when fetching routes for {route_name}')
@@ -59,7 +61,7 @@ def get_routes(route_name: str = "") -> list:
         json_response = response.json()
     except requests.exceptions.JSONDecodeError as e:
         logger.error(f'JSON decode error when fetching routes for {route_name}: {e}')
-        return []
+        raise TransmilenioAPIError('Respuesta inválida de Transmilenio')
 
     try:
         return [
@@ -73,10 +75,10 @@ def get_routes(route_name: str = "") -> list:
         ]
     except KeyError as e:
         logger.error(f'Missing key {e} in route data for {route_name}')
-        return []
+        raise TransmilenioAPIError('Datos incompletos en la respuesta de Transmilenio')
     except TypeError:
         logger.error(f'Invalid data format in route response for {route_name}')
-        return []
+        raise TransmilenioAPIError('Formato de datos inesperado de Transmilenio')
 
 
 def find_route_by_name(route_name: str = "") -> list:
@@ -99,29 +101,29 @@ def find_route_by_name(route_name: str = "") -> list:
         response.raise_for_status()
     except requests.exceptions.ConnectTimeout:
         logger.error(f'Connection timeout when searching for route {route_name}')
-        return []
+        raise TransmilenioAPIError('Tiempo de espera agotado al conectar con Transmilenio')
     except requests.exceptions.ReadTimeout:
         logger.error(f'Read timeout when searching for route {route_name}')
-        return []
+        raise TransmilenioAPIError('Transmilenio tardó demasiado en responder')
     except requests.exceptions.ConnectionError:
         logger.error(f'Connection error when searching for route {route_name}')
-        return []
+        raise TransmilenioAPIError('No se pudo conectar con Transmilenio')
     except requests.exceptions.HTTPError as e:
         logger.error(f'HTTP error {e.response.status_code} when searching for route {route_name}: {e}')
-        return []
+        raise TransmilenioAPIError(f'Transmilenio respondió con error ({e.response.status_code})')
     except requests.exceptions.RequestException as e:
         logger.error(f'Unexpected error when searching for route {route_name}: {e}')
-        return []
+        raise TransmilenioAPIError('Error inesperado al consultar Transmilenio')
 
     try:
         json_response = response.json()
     except requests.exceptions.JSONDecodeError as e:
         logger.error(f'JSON decode error when searching for route {route_name}: {e}')
-        return []
+        raise TransmilenioAPIError('Respuesta inválida de Transmilenio')
 
     try:
         routes_in_json = json_response.get("lista_rutas", [])
-        
+
         return [
             {
                 "route_id": route["id"],
@@ -132,10 +134,10 @@ def find_route_by_name(route_name: str = "") -> list:
         ]
     except KeyError as e:
         logger.error(f'Missing key {e} in route search results for {route_name}')
-        return []
+        raise TransmilenioAPIError('Datos incompletos en la respuesta de Transmilenio')
     except TypeError:
         logger.error(f'Invalid data format in route search response for {route_name}')
-        return []
+        raise TransmilenioAPIError('Formato de datos inesperado de Transmilenio')
 
 
 def find_stations_for_route(route_id: str = "") -> list:
@@ -161,25 +163,25 @@ def find_stations_for_route(route_id: str = "") -> list:
         response.raise_for_status()
     except requests.exceptions.ConnectTimeout:
         logger.error(f'Connection timeout when fetching stations for route {route_id}')
-        return []
+        raise TransmilenioAPIError('Tiempo de espera agotado al conectar con Transmilenio')
     except requests.exceptions.ReadTimeout:
         logger.error(f'Read timeout when fetching stations for route {route_id}')
-        return []
+        raise TransmilenioAPIError('Transmilenio tardó demasiado en responder')
     except requests.exceptions.ConnectionError:
         logger.error(f'Connection error when fetching stations for route {route_id}')
-        return []
+        raise TransmilenioAPIError('No se pudo conectar con Transmilenio')
     except requests.exceptions.HTTPError as e:
         logger.error(f'HTTP error {e.response.status_code} when fetching stations for route {route_id}: {e}')
-        return []
+        raise TransmilenioAPIError(f'Transmilenio respondió con error ({e.response.status_code})')
     except requests.exceptions.RequestException as e:
         logger.error(f'Unexpected error when fetching stations for route {route_id}: {e}')
-        return []
+        raise TransmilenioAPIError('Error inesperado al consultar Transmilenio')
 
     try:
         json_response = response.json()
     except requests.exceptions.JSONDecodeError as e:
         logger.error(f'JSON decode error when fetching stations for route {route_id}: {e}')
-        return []
+        raise TransmilenioAPIError('Respuesta inválida de Transmilenio')
 
     try:
         stations = [
@@ -193,14 +195,14 @@ def find_stations_for_route(route_id: str = "") -> list:
             )
             for route_path in json_response['recorrido']['data']
         ]
-        
+
         return stations
     except KeyError as e:
         logger.error(f'Missing key {e} in station data for route {route_id}')
-        return []
+        raise TransmilenioAPIError('Datos incompletos en la respuesta de Transmilenio')
     except TypeError:
         logger.error(f'Invalid data format in station response for route {route_id}')
-        return []
+        raise TransmilenioAPIError('Formato de datos inesperado de Transmilenio')
     except Exception as e:
         logger.error(f'Unexpected error processing station data for route {route_id}: {e}')
-        return []
+        raise TransmilenioAPIError('Error inesperado al procesar datos de estaciones')
