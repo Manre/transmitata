@@ -6,7 +6,14 @@ from rest_framework.views import APIView
 from api.exceptions import TransmilenioAPIError
 from api.models import RouteCollection
 from api.serializers import RouteCollectionDetailSerializer, RouteCollectionListSerializer
+from transmitata.__version__ import VERSION
 from .services import get_routes, find_route_by_name, find_stations_for_route
+
+
+class VersionView(APIView):
+
+    def get(self, request):
+        return Response({"version": VERSION})
 
 
 class RoutesView(APIView):

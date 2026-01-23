@@ -57,12 +57,17 @@ All service functions return empty lists on errors (timeouts, connection errors,
 ### API Endpoints
 
 ```
+GET /api/v1/version                    - Get API version
 GET /api/v1/route/<route_name>         - Get real-time bus locations for a route
 GET /api/v1/route/<route_name>/find    - Search routes by name
 GET /api/v1/stations/<route_id>/find   - Get stations for a route
 GET /api/v1/collections/               - List route collections
 GET /api/v1/collections/<id>           - Get specific collection with routes
 ```
+
+### Versioning
+
+Version is defined in `transmitata/__version__.py` using semantic versioning (MAJOR.MINOR.PATCH).
 
 ### Data Models
 

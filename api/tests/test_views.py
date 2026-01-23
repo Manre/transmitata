@@ -4,6 +4,19 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from api.exceptions import TransmilenioAPIError
 from api.models import Route, RouteCollection
+from transmitata.__version__ import VERSION
+
+
+class VersionViewTest(APITestCase):
+    """Test cases for VersionView"""
+
+    def test_version_view_returns_version(self):
+        """Test VersionView returns the current version"""
+        url = reverse('version')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['version'], VERSION)
 
 
 class RoutesViewTest(APITestCase):
