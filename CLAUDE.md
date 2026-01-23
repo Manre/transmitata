@@ -41,7 +41,7 @@ make shell                                   # Open bash in transmitata-web-1 co
 - `models.py` - Route and RouteCollection models
 - `serializers.py` - DRF serializers
 
-**`web/`** - Web interface with template-based views (HomeView, HomeV2View)
+**`web/`** - Web interface with template-based views (HomeView)
 
 **`transmitata/`** - Django project configuration
 

@@ -11,9 +11,4 @@ urlpatterns = [
         HomeView.as_view(),
         name="home",
     ),
-    # path(
-    #     "v2/",
-    #     HomeV2View.as_view(),
-    #     name="home-v2",
-    # ),
 ]

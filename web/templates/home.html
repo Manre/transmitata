@@ -94,7 +94,7 @@
                 $.ajax(settings)
                     .done(function (points) {
                         map.fireEvent('dataload');
-                        hideError();
+                        hideError('route');
                         if (points.length > 0){
                             display_map(points);
                         }
@@ -102,7 +102,7 @@
                     .fail(function (jqXHR) {
                         map.fireEvent('dataload');
                         var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
-                        showError(errorMsg);
+                        showError(errorMsg, 'route');
                     });
 
                 setTimeout(
@@ -323,14 +323,14 @@
 
                 $.ajax(settings)
                     .done(function (stations) {
-                        hideError();
+                        hideError('stations');
                         if (stations.length > 0){
                             display_stations_in_map(stations);
                         }
                     })
                     .fail(function (jqXHR) {
-                        var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al conectar con Transmilenio';
-                        showError(errorMsg);
+                        var errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.error) || 'Error al obtener estaciones';
+                        showError(errorMsg, 'stations');
                     });
             };
 
@@ -354,14 +354,28 @@
             }
 
             // Error handling
+            var activeErrors = {};
 
-            function showError(message) {
-                $('#error_message').text(message);
-                $('#error_container').show();
+            function showError(message, source) {
+                source = source || 'general';
+                activeErrors[source] = message;
+                updateErrorDisplay();
             }
 
-            function hideError() {
-                $('#error_container').hide();
+            function hideError(source) {
+                source = source || 'general';
+                delete activeErrors[source];
+                updateErrorDisplay();
+            }
+
+            function updateErrorDisplay() {
+                var errorMessages = Object.values(activeErrors);
+                if (errorMessages.length > 0) {
+                    $('#error_message').text(errorMessages.join(' | '));
+                    $('#error_container').show();
+                } else {
+                    $('#error_container').hide();
+                }
             }
 
             // Utils
