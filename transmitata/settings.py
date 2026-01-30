@@ -26,15 +26,15 @@ SECRET_KEY = 'django-insecure-bmi@5o#7k#(%#ml3f_3xvks$9&nq&j%8d3*8k_c8(l!)nnw#rq
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "127.0.0.1:8000",
-    "localhost",
-    "localhost:8000",
-    "192.168.10.111",
-    "transmitata.herokuapp.com",
-    ".ngrok.io",
-    ".pagekite.me",
-    "192.168.10.102",
+    '127.0.0.1',
+    '127.0.0.1:8000',
+    'localhost',
+    'localhost:8000',
+    '192.168.10.111',
+    'transmitata.herokuapp.com',
+    '.ngrok.io',
+    '.pagekite.me',
+    '192.168.10.102',
     'transmitata.manre-universe.net',
 ]
 
@@ -130,7 +130,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type

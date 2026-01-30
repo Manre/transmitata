@@ -1,0 +1,25 @@
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+
+exclude = [
+    "*/migrations/*",
+    "manage.py",
+    "bin/",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "DJ",  # flake8-django
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["api", "web", "transmitata"]
+
+[tool.ruff.format]
+quote-style = "single"
