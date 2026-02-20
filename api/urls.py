@@ -1,9 +1,11 @@
 """urls for api"""
+
 from django.urls import path
 from rest_framework import routers
 
 from api.views import RouteCollectionViewSet
-from .views import RoutesView, FindRoutesView, FindStationsForRoute, VersionView
+
+from .views import FindRoutesView, FindStationsForRoute, RoutesView, VersionView
 
 router = routers.SimpleRouter()
 router.register(r'collections', RouteCollectionViewSet)

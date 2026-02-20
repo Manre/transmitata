@@ -1,7 +1,9 @@
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
+
 import pytest
+
 from api.exceptions import TransmilenioAPIError
-from api.services import get_routes, find_route_by_name, find_stations_for_route
+from api.services import find_route_by_name, find_stations_for_route, get_routes
 
 
 class TestGetRoutes:
@@ -12,13 +14,7 @@ class TestGetRoutes:
         """Test successful retrieval of routes"""
         # Mock response data
         mock_response = Mock()
-        mock_response.json.return_value = [
-            {
-                'latitude': 4.56,
-                'longitude': -74.12,
-                'label': 'T012'
-            }
-        ]
+        mock_response.json.return_value = [{'latitude': 4.56, 'longitude': -74.12, 'label': 'T012'}]
         mock_response.raise_for_status.return_value = None
         mock_post.return_value = mock_response
 
@@ -43,6 +39,7 @@ class TestGetRoutes:
     def test_get_routes_connection_timeout(self, mock_post):
         """Test get_routes when connection times out raises TransmilenioAPIError"""
         from requests.exceptions import ConnectTimeout
+
         mock_post.side_effect = ConnectTimeout()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -53,6 +50,7 @@ class TestGetRoutes:
     def test_get_routes_read_timeout(self, mock_post):
         """Test get_routes when read times out raises TransmilenioAPIError"""
         from requests.exceptions import ReadTimeout
+
         mock_post.side_effect = ReadTimeout()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -63,6 +61,7 @@ class TestGetRoutes:
     def test_get_routes_connection_error(self, mock_post):
         """Test get_routes when connection fails raises TransmilenioAPIError"""
         from requests.exceptions import ConnectionError
+
         mock_post.side_effect = ConnectionError()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -73,6 +72,7 @@ class TestGetRoutes:
     def test_get_routes_proxy_error(self, mock_post):
         """Test get_routes when proxy fails raises TransmilenioAPIError"""
         from requests.exceptions import ProxyError
+
         mock_post.side_effect = ProxyError()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -83,6 +83,7 @@ class TestGetRoutes:
     def test_get_routes_http_error(self, mock_post):
         """Test get_routes when HTTP error occurs raises TransmilenioAPIError"""
         from requests.exceptions import HTTPError
+
         mock_response = Mock()
         mock_response.status_code = 500
         mock_post.side_effect = HTTPError(response=mock_response)
@@ -95,6 +96,7 @@ class TestGetRoutes:
     def test_get_routes_request_exception(self, mock_post):
         """Test get_routes when unexpected request error occurs raises TransmilenioAPIError"""
         from requests.exceptions import RequestException
+
         mock_post.side_effect = RequestException()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -116,6 +118,7 @@ class TestGetRoutes:
     def test_get_routes_json_decode_error(self, mock_post):
         """Test get_routes when JSON decode error occurs raises TransmilenioAPIError"""
         from requests.exceptions import JSONDecodeError
+
         mock_response = Mock()
         mock_response.text = 'invalid'
         mock_response.json.side_effect = JSONDecodeError('Invalid JSON', '', 0)
@@ -161,15 +164,7 @@ class TestFindRouteByName:
         """Test successful route search"""
         # Mock response data
         mock_response = Mock()
-        mock_response.json.return_value = {
-            "lista_rutas": [
-                {
-                    "id": "123",
-                    "codigo": "T1",
-                    "nombre": "Transmilenio 1"
-                }
-            ]
-        }
+        mock_response.json.return_value = {'lista_rutas': [{'id': '123', 'codigo': 'T1', 'nombre': 'Transmilenio 1'}]}
         mock_response.raise_for_status.return_value = None
         mock_request.return_value = mock_response
 
@@ -193,6 +188,7 @@ class TestFindRouteByName:
     def test_find_route_by_name_connection_timeout(self, mock_request):
         """Test find_route_by_name when connection times out raises TransmilenioAPIError"""
         from requests.exceptions import ConnectTimeout
+
         mock_request.side_effect = ConnectTimeout()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -203,6 +199,7 @@ class TestFindRouteByName:
     def test_find_route_by_name_read_timeout(self, mock_request):
         """Test find_route_by_name when read times out raises TransmilenioAPIError"""
         from requests.exceptions import ReadTimeout
+
         mock_request.side_effect = ReadTimeout()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -213,6 +210,7 @@ class TestFindRouteByName:
     def test_find_route_by_name_connection_error(self, mock_request):
         """Test find_route_by_name when connection fails raises TransmilenioAPIError"""
         from requests.exceptions import ConnectionError
+
         mock_request.side_effect = ConnectionError()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -223,6 +221,7 @@ class TestFindRouteByName:
     def test_find_route_by_name_http_error(self, mock_request):
         """Test find_route_by_name when HTTP error occurs raises TransmilenioAPIError"""
         from requests.exceptions import HTTPError
+
         mock_response = Mock()
         mock_response.status_code = 503
         mock_request.side_effect = HTTPError(response=mock_response)
@@ -235,6 +234,7 @@ class TestFindRouteByName:
     def test_find_route_by_name_json_decode_error(self, mock_request):
         """Test find_route_by_name when JSON decode error occurs raises TransmilenioAPIError"""
         from requests.exceptions import JSONDecodeError
+
         mock_response = Mock()
         mock_response.json.side_effect = JSONDecodeError('Invalid JSON', '', 0)
         mock_response.raise_for_status.return_value = None
@@ -277,15 +277,7 @@ class TestFindStationsForRoute:
         """Test successful station retrieval"""
         # Mock response data
         mock_response = Mock()
-        mock_response.json.return_value = {
-            "recorrido": {
-                "data": [
-                    {
-                        "coordenada": "4.56,-74.12"
-                    }
-                ]
-            }
-        }
+        mock_response.json.return_value = {'recorrido': {'data': [{'coordenada': '4.56,-74.12'}]}}
         mock_response.raise_for_status.return_value = None
         mock_get.return_value = mock_response
 
@@ -308,6 +300,7 @@ class TestFindStationsForRoute:
     def test_find_stations_for_route_connection_timeout(self, mock_get):
         """Test find_stations_for_route when connection times out raises TransmilenioAPIError"""
         from requests.exceptions import ConnectTimeout
+
         mock_get.side_effect = ConnectTimeout()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -318,6 +311,7 @@ class TestFindStationsForRoute:
     def test_find_stations_for_route_read_timeout(self, mock_get):
         """Test find_stations_for_route when read times out raises TransmilenioAPIError"""
         from requests.exceptions import ReadTimeout
+
         mock_get.side_effect = ReadTimeout()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -328,6 +322,7 @@ class TestFindStationsForRoute:
     def test_find_stations_for_route_connection_error(self, mock_get):
         """Test find_stations_for_route when connection fails raises TransmilenioAPIError"""
         from requests.exceptions import ConnectionError
+
         mock_get.side_effect = ConnectionError()
 
         with pytest.raises(TransmilenioAPIError) as exc_info:
@@ -338,6 +333,7 @@ class TestFindStationsForRoute:
     def test_find_stations_for_route_http_error(self, mock_get):
         """Test find_stations_for_route when HTTP error occurs raises TransmilenioAPIError"""
         from requests.exceptions import HTTPError
+
         mock_response = Mock()
         mock_response.status_code = 404
         mock_get.side_effect = HTTPError(response=mock_response)
@@ -350,6 +346,7 @@ class TestFindStationsForRoute:
     def test_find_stations_for_route_json_decode_error(self, mock_get):
         """Test find_stations_for_route when JSON decode error occurs raises TransmilenioAPIError"""
         from requests.exceptions import JSONDecodeError
+
         mock_response = Mock()
         mock_response.json.side_effect = JSONDecodeError('Invalid JSON', '', 0)
         mock_response.raise_for_status.return_value = None
